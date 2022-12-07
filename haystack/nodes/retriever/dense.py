@@ -217,6 +217,7 @@ class DensePassageRetriever(BaseRetriever):
         top_k: Optional[int] = None,
         index: str = None,
         headers: Optional[Dict[str, str]] = None,
+        es_query: Optional[Dict[str, str]] = None,
         scale_score: bool = None,
     ) -> List[Document]:
         """
@@ -304,7 +305,7 @@ class DensePassageRetriever(BaseRetriever):
             scale_score = self.scale_score
         query_emb = self.embed_queries(texts=[query])
         documents = self.document_store.query_by_embedding(
-            query_emb=query_emb[0], top_k=top_k, filters=filters, index=index, headers=headers, scale_score=scale_score
+            query_emb=query_emb[0], top_k=top_k, filters=filters, index=index, headers=headers,es_query=es_query, scale_score=scale_score
         )
         return documents
 
@@ -1557,6 +1558,7 @@ class EmbeddingRetriever(BaseRetriever):
         top_k: Optional[int] = None,
         index: str = None,
         headers: Optional[Dict[str, str]] = None,
+        es_query: Optional[Dict[str, str]] = None,
         scale_score: bool = None,
     ) -> List[Document]:
         """
@@ -1641,7 +1643,7 @@ class EmbeddingRetriever(BaseRetriever):
             scale_score = self.scale_score
         query_emb = self.embed_queries(texts=[query])
         documents = self.document_store.query_by_embedding(
-            query_emb=query_emb[0], filters=filters, top_k=top_k, index=index, headers=headers, scale_score=scale_score
+            query_emb=query_emb[0], filters=filters, top_k=top_k, index=index, headers=headers,es_query=es_query, scale_score=scale_score
         )
         return documents
 

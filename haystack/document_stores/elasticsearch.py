@@ -1175,6 +1175,7 @@ class BaseElasticsearchDocumentStore(KeywordDocumentStore):
         index: Optional[str] = None,
         return_embedding: Optional[bool] = None,
         headers: Optional[Dict[str, str]] = None,
+        es_query: Optional[Dict[str, str]] = None,
         scale_score: bool = True,
     ) -> List[Document]:
         """
@@ -1271,6 +1272,13 @@ class BaseElasticsearchDocumentStore(KeywordDocumentStore):
                 body["query"]["script_score"]["query"] = filter_
             else:
                 body["query"]["script_score"]["query"]["bool"]["filter"]["bool"]["must"].append(filter_)
+
+        if es_query:
+            if body["query"]["script_score"]["query"] == {"match_all": {}}:
+                body["query"]["script_score"]["query"] = es_query["query"]
+            else:
+                body["query"]["script_score"]["query"]["bool"]["should"] = [es_query["query"]]
+            body["highlight"] = es_query["highlight"]
 
         excluded_meta_data: Optional[list] = None
 
